@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 function getStoragePath() {
+  // hello
   // 首先检查用户是否在设置中指定了路径
   // const config = vscode.workspace.getConfiguration('cursorFakeMachine');
   // const customPath = config.get('storagePath');

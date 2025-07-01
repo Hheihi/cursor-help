@@ -40,6 +40,8 @@
         "lint": "eslint .",
         "pretest": "pnpm run lint",
         "test": "vscode-test",
+        "ai-review": "node ai-code-review.js",
+        "ai-review:install": "chmod +x install.sh && ./install.sh",
         "prepare": "echo 'node_modules/**/*' > .vscodeignore"
     },
     "devDependencies": {
