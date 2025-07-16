@@ -5,37 +5,42 @@ const path = require('path');
 const { execSync, exec } = require('child_process');
 const crypto = require('crypto');
 const https = require('https');
+const Anthropic = require('@anthropic-ai/sdk');
 
 class AICodeReview {
     constructor() {
         this.config = this.loadConfig();
         this.gitDiff = '';
         this.reviewResult = '';
+        this.client = new Anthropic({
+            apiKey: 'sk-a1tu9Pu3zvd3mP0OzYCShXv8KErIwdFJNvxSL9gUj0oP3uhK', // This is the default and can be omitted
+        });
     }
+
 
     loadConfig() {
         try {
             const configPath = path.join(__dirname, 'config.json');
             const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-            
+
             // 优先使用环境变量中的敏感配置
             if (process.env.DEEPSEEK_API_KEY) {
                 config.deepseek.apiKey = process.env.DEEPSEEK_API_KEY;
             }
-            
+
             if (process.env.DINGTALK_WEBHOOK) {
                 config.dingtalk.webhook = process.env.DINGTALK_WEBHOOK;
             }
-            
+
             if (process.env.DINGTALK_SECRET) {
                 config.dingtalk.secret = process.env.DINGTALK_SECRET;
             }
-            
+
             // 验证必要的配置
             if (!config.deepseek.apiKey || config.deepseek.apiKey === 'YOUR_DEEPSEEK_API_KEY') {
                 throw new Error('DeepSeek API Key未配置，请设置环境变量DEEPSEEK_API_KEY或在config.json中配置');
             }
-            
+
             return config;
         } catch (error) {
             console.error('配置文件加载失败:', error.message);
@@ -66,11 +71,11 @@ class AICodeReview {
             const diff = execSync(diffCommand, { encoding: 'utf8' });
 
             // 限制diff长度
-            const lines = diff.split('\n');
-            if (lines.length > this.config.codeReview.maxDiffLines) {
-                console.log(`⚠️  Diff内容过长，截取前 ${this.config.codeReview.maxDiffLines} 行`);
-                return lines.slice(0, this.config.codeReview.maxDiffLines).join('\n');
-            }
+            // const lines = diff.split('\n');
+            // if (lines.length > this.config.codeReview.maxDiffLines) {
+            //     console.log(`⚠️  Diff内容过长，截取前 ${this.config.codeReview.maxDiffLines} 行`);
+            //     return lines.slice(0, this.config.codeReview.maxDiffLines).join('\n');
+            // }
 
             return diff;
         } catch (error) {
@@ -134,13 +139,13 @@ class AICodeReview {
 
         try {
             const response = await this.makeHttpRequest({
-                hostname: 'api.deepseek.com',
+                hostname: 'anyrouter.top',
                 port: 443,
-                path: '/v1/chat/completions',
+                // path: '/v1/chat/completions',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.config.deepseek.apiKey}`
+                     'Authorization': `Bearer ${this.config.anthropic.apiKey}`
                 }
             }, JSON.stringify(requestData));
 
@@ -155,6 +160,18 @@ class AICodeReview {
             console.error('DeepSeek API调用失败:', error.message);
             return `❌ AI分析失败: ${error.message}`;
         }
+    }
+
+    async analyzeCodeWithAnthropic(diff) {
+        const prompt = this.buildAnalysisPrompt(diff);
+        const response = await this.client.messages.create({
+            model: 'claude-sonnet-4-20250514',
+            messages: [
+                { role: 'user', content: prompt }
+            ]
+        });
+        console.log(response,'response');
+        return response.content[0].text;
     }
 
     buildAnalysisPrompt(diff) {
@@ -285,6 +302,7 @@ ${diff}
 
             // 2. AI分析
             this.reviewResult = await this.analyzeCodeWithDeepSeek(this.gitDiff);
+            // this.reviewResult = await this.analyzeCodeWithAnthropic(this.gitDiff);
 
             // 3. 输出结果到控制台
             console.log('\n' + '='.repeat(80));

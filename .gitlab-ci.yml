@@ -1,0 +1,41 @@
+stages:
+  - test
+  - ai-review
+
+# AI代码审查任务
+ai-code-review:
+  stage: ai-review
+  image: node:18
+  before_script:
+    - echo "🚀 准备AI代码审查环境..."
+    - npm install -g pnpm
+    - pnpm install
+  script:
+    - echo "🤖 开始AI代码审查..."
+    - chmod +x ai-code-review.js
+    - node ai-code-review.js origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+  only:
+    - merge_requests
+  variables:
+    # 从GitLab CI/CD变量中获取敏感信息
+    DEEPSEEK_API_KEY: $DEEPSEEK_API_KEY
+    DINGTALK_WEBHOOK: $DINGTALK_WEBHOOK
+    DINGTALK_SECRET: $DINGTALK_SECRET
+  artifacts:
+    reports:
+      # 可选：生成代码审查报告
+      junit: ai-review-report.xml
+    expire_in: 1 week
+  allow_failure: true  # 即使AI审查失败，MR也可以继续
+  
+# 可选：添加代码质量检查
+# code-quality:
+#   stage: test
+#   image: node:18
+#   before_script:
+#     - npm install -g pnpm
+#     - pnpm install
+#   script:
+#     - pnpm run lint
+#   only:
+#     - merge_requests 

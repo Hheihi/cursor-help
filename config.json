@@ -6,6 +6,13 @@
     "maxTokens": 8192,
     "temperature": 0.1
   },
+  "anthropic": {
+    "apiKey": "sk-a1tu9Pu3zvd3mP0OzYCShXv8KErIwdFJNvxSL9gUj0oP3uhK",
+    "baseURL": "https://anyrouter.top",
+    "model": "claude-sonnet-4-20250514",
+    "maxTokens": 8192,
+    "temperature": 0.1
+  },
   "dingtalk": {
     "webhook": "https://oapi.dingtalk.com/robot/send?access_token=37de867592b289ac6266aa39d6a399876715388215e095bf6cea60f7c89069ef",
     "secret": "SEC9650d7ef5f31bef2b112ae2299d96c7feebb806472face24591f9e1d293bac67"
