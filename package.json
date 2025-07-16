@@ -40,6 +40,8 @@
         "lint": "eslint .",
         "pretest": "pnpm run lint",
         "test": "vscode-test",
+        "ai-review": "node ai-code-review.js",
+        "ai-review:install": "chmod +x install.sh && ./install.sh",
         "prepare": "echo 'node_modules/**/*' > .vscodeignore"
     },
     "devDependencies": {
@@ -63,6 +65,7 @@
     },
     "icon": "icon.png",
     "dependencies": {
+        "@anthropic-ai/sdk": "^0.56.0",
         "axios": "^1.10.0",
         "openai": "^5.6.0"
     }

@@ -1,0 +1,38 @@
+{
+  "deepseek": {
+    "apiKey": "sk-052e176af3ed40258dc024701bad4a12",
+    "baseURL": "https://api.deepseek.com",
+    "model": "deepseek-chat",
+    "maxTokens": 8192,
+    "temperature": 0.1
+  },
+  "anthropic": {
+    "apiKey": "sk-a1tu9Pu3zvd3mP0OzYCShXv8KErIwdFJNvxSL9gUj0oP3uhK",
+    "baseURL": "https://anyrouter.top",
+    "model": "claude-sonnet-4-20250514",
+    "maxTokens": 8192,
+    "temperature": 0.1
+  },
+  "dingtalk": {
+    "webhook": "https://oapi.dingtalk.com/robot/send?access_token=37de867592b289ac6266aa39d6a399876715388215e095bf6cea60f7c89069ef",
+    "secret": "SEC9650d7ef5f31bef2b112ae2299d96c7feebb806472face24591f9e1d293bac67"
+  },
+  "codeReview": {
+    "includeFiles": ["*.js", "*.ts", "*.py", "*.java", "*.go", "*.cpp", "*.c", "*.h"],
+    "excludeFiles": ["node_modules/**", "dist/**", "build/**", "*.min.js", "*.test.js"],
+    "maxDiffLines": 500,
+    "reviewAspects": [
+      "代码规范性",
+      "潜在bug",
+      "性能优化",
+      "安全问题",
+      "可维护性",
+      "最佳实践"
+    ]
+  },
+  "project": {
+    "name": "项目名称",
+    "frontendGroup": "前端开发群",
+    "backendGroup": "后端开发群"
+  }
+} 
